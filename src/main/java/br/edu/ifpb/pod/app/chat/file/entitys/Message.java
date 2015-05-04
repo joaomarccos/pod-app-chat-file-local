@@ -4,7 +4,7 @@ package br.edu.ifpb.pod.app.chat.file.entitys;
  *
  * @author João Marcos F <joaomarccos.ads@gmail.com>
  */
-public class Message {
+public class Message implements Comparable<Message>{
     private long id;
     private String userName;
     private String msg;
@@ -54,11 +54,16 @@ public class Message {
     public boolean equals(Object obj) {
         return this.id == ((Message) obj).getId();
     }
-
+    
     @Override
     public int hashCode() {
         return new Long(this.id).hashCode();
     }        
+
+    @Override
+    public int compareTo(Message m) {
+       return (int) (this.getId()-m.getId());
+    }
     
     
 }

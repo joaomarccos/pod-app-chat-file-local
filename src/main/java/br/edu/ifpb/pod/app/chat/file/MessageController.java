@@ -19,6 +19,7 @@ public class MessageController {
 
     private static Path path;
     private static Path path_c;
+    
 
     public MessageController() throws IOException {
         PropertiesLoader pl = new PropertiesLoader();
@@ -41,7 +42,7 @@ public class MessageController {
 
     }
 
-    public boolean writeInFile(Message msg) throws IOException {
+    private boolean writeInFile(Message msg) throws IOException {
         
         if (!canWrite()) {
             return false;
@@ -58,11 +59,11 @@ public class MessageController {
         return true;
     }
 
-    public void closeFile() throws IOException {
+    private void closeFile() throws IOException {
         Files.write(path_c, "-closed-".getBytes());
     }
 
-    public void openFile() throws IOException {
+    private void openFile() throws IOException {
         Files.write(path_c, "-openned-".getBytes());
     }
 
@@ -97,5 +98,9 @@ public class MessageController {
 
     public ArrayList<Message> listMessages() throws NumberFormatException, IOException {
         return loadMessages();
+    }
+    
+    public long fileLength() throws IOException{
+        return Files.size(path);
     }
 }

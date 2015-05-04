@@ -5,6 +5,8 @@
  */
 package br.edu.ifpb.pod.app.chat.chat.GUI;
 
+import br.edu.ifpb.pod.app.chat.file.ListenerChangeFile;
+import br.edu.ifpb.pod.app.chat.file.entitys.User;
 import javax.swing.JPanel;
 
 /**
@@ -84,7 +86,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jTextFielduserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(jButtonEnter))
-                .addContainerGap(601, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         pack();
@@ -92,9 +94,10 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButtonEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnterActionPerformed
         if(!this.jTextFielduserName.getText().isEmpty()){
-            this.getContentPane().setVisible(false);
-            this.setContentPane(new ChatPanel());
-            this.getContentPane().setVisible(true);
+            this.dispose();
+            User user=new User(jTextFielduserName.getText());
+            new Main(user).setVisible(true);
+
         }
     }//GEN-LAST:event_jButtonEnterActionPerformed
 
@@ -109,4 +112,5 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextFielduserName;
     // End of variables declaration//GEN-END:variables
+
 }
