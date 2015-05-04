@@ -1,89 +1,83 @@
 package br.edu.ifpb.pod.app.chat.file;
 
-import br.edu.ifpb.pod.app.chat.chat.GUI.Writter;
 import br.edu.ifpb.pod.app.chat.file.entitys.User;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 import java.util.ArrayList;
 
 /**
  *
  * @author João Marcos F <joaomarccos.ads@gmail.com>
  */
-public class LoginController implements Writter {
+public class LoginController {
 
-    private static final Path PATH = Paths.get("/home/joaomarcos/data/login.txt");
-    private static final Path PATH_C = Paths.get("/home/joaomarcos/data/concurrence_login.txt");
-    private ArrayList<User> loggedUsers;
+    private static Path path;
+    private static Path path_c;
 
     public LoginController() throws IOException {
-        if (!Files.exists(PATH)) {
-            Files.createFile(PATH);
+        PropertiesLoader pl = new PropertiesLoader();
+        path = pl.getLoginfile();
+        path_c = pl.getLoginCurFile();
+
+        if (!Files.exists(path)) {
+            Files.createFile(path);
         }
 
-        if (!Files.exists(PATH_C)) {
-            Files.createFile(PATH_C);
-            Files.write(PATH_C, "-closed-".getBytes());
+        if (!Files.exists(path_c)) {
+            Files.createFile(path_c);
+            closeFile();
         }
-
-        loggedUsers = new ArrayList<>();
 
     }
 
     @SuppressWarnings("empty-statement")
-    public boolean login(User user) throws IOException {
+    public void login(User user) throws IOException {
 
-        loggedUsers = loadUsers();
+        ArrayList<User> loggedUsers = loadUsers();
 
         if (!loggedUsers.contains(user)) {
-            loggedUsers.add(user);
-
-//            Testes com Thread
-//            FileWriter fw = new FileWriter(this);
-//            new Thread(fw).start();
-
-            while(!writeInFile());
-            
-            return true;
+            while (!writeInFile(user));
         }
 
-        return false;
     }
 
-    @Override
-    public boolean writeInFile() throws IOException {               
-        
-        if(!canWrite())
-            return false;                
-        
-        ArrayList<User> storedUsers = loadUsers();
-        Files.write(PATH_C, "-openned-".getBytes());
-        
-        for (User user : loggedUsers) {
-            if (!storedUsers.contains(user)) {
-                storedUsers.add(user);
-            }
+    public boolean writeInFile(User user) throws IOException {
+
+        if (!canWrite()) {
+            return false;
         }
 
-        StringBuilder sbUser = new StringBuilder();
+        openFile();
 
-        for (User newUser : storedUsers) {
-            sbUser.append(newUser.getName()).append("\n");
+        try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(path, CREATE, APPEND))) {
+            byte[] bytes = (user.getName() + "\n").getBytes();
+            out.write(bytes, 0, bytes.length);
         }
 
-        Files.write(PATH, sbUser.toString().getBytes());
-        Files.write(PATH_C, "-closed-".getBytes());
+        closeFile();
+
         return true;
 
     }
 
-    private  ArrayList<User> loadUsers() throws IOException {        
+    public void closeFile() throws IOException {
+        Files.write(path_c, "-closed-".getBytes());
+    }
+
+    public void openFile() throws IOException {
+        Files.write(path_c, "-openned-".getBytes());
+    }
+
+    private ArrayList<User> loadUsers() throws IOException {
         ArrayList<User> users = new ArrayList<>();
-        
-        try (BufferedReader read = Files.newBufferedReader(PATH)) {
+
+        try (BufferedReader read = Files.newBufferedReader(path)) {
             String line = null;
             while ((line = read.readLine()) != null) {
                 users.add(new User(line));
@@ -95,20 +89,28 @@ public class LoginController implements Writter {
 
     public void logout(User user) throws IOException {
 
-        loggedUsers = loadUsers();
+        ArrayList<User> loggedUsers = loadUsers();
         loggedUsers.remove(user);
 
-//        FileWriter fw = new FileWriter(this);
-//        new Thread(fw).start();
+        while (!canWrite());
+
+        openFile();
+
+        StringBuilder sb = new StringBuilder();
+        for (User loggedUser : loggedUsers) {
+            sb.append(loggedUser.getName()).append("\n");
+        }
+        Files.write(path, sb.toString().getBytes());
+
+        closeFile();
         
-        while(!writeInFile());        
     }
 
     public boolean canWrite() throws IOException {
 
-        try (BufferedReader read = Files.newBufferedReader(PATH_C)) {
+        try (BufferedReader read = Files.newBufferedReader(path_c)) {
             String line = read.readLine();
-            if (line!=null && line.equals("-closed-")) {
+            if (line != null && line.equals("-closed-")) {
                 return true;
             }
         }
