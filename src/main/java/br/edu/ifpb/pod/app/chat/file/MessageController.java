@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,10 +21,13 @@ public class MessageController {
 
     private static Path path;
     private static Path path_c;
+    private long lastFileLenght;
+    private ArrayList<ListenerChangeFile> listenners ;
     
 
     public MessageController() throws IOException {
         PropertiesLoader pl = new PropertiesLoader();
+        this.listenners = new ArrayList<>();
         path = pl.getMsgfile();
         path_c = pl.getMsgCurFile();
 
@@ -33,6 +38,8 @@ public class MessageController {
             Files.createFile(path_c);
             closeFile();
         }
+        
+        this.lastFileLenght = fileLength();
     }
 
     @SuppressWarnings("empty-statement")
@@ -98,9 +105,35 @@ public class MessageController {
 
     public ArrayList<Message> listMessages() throws NumberFormatException, IOException {
         return loadMessages();
+    }   
+
+    public void addListenner(ListenerChangeFile listenning) {
+        this.listenners.add(listenning);
     }
     
     public long fileLength() throws IOException{
         return Files.size(path);
     }
+    
+    private void listenMsgs(){
+        Runnable runnable = new Runnable() {
+            public void run() {
+                for(;;){
+                    try {
+                        long fileLen = fileLength();
+                        if(lastFileLenght!=fileLen){
+                            for (ListenerChangeFile listener : listenners) {
+                                listener.notifyChange();                                
+                                lastFileLenght = fileLen;
+                            }
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(MessageController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        };
+        
+        new Thread(runnable).start();
+    }    
 }
