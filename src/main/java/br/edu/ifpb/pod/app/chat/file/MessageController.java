@@ -90,7 +90,7 @@ public class MessageController {
         }
     }
 
-    public boolean canWrite() throws IOException {
+    private boolean canWrite() throws IOException {
 
         try (BufferedReader read = Files.newBufferedReader(path_c)) {
             String line = read.readLine();
@@ -111,11 +111,11 @@ public class MessageController {
         this.listenners.add(listenning);
     }
     
-    public long fileLength() throws IOException{
+    private long fileLength() throws IOException{
         return Files.size(path);
     }
     
-    private void listenMsgs(){
+    public void listenMsgs(){
         Runnable runnable = new Runnable() {
             public void run() {
                 for(;;){
