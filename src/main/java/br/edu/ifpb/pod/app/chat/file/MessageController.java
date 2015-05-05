@@ -22,8 +22,7 @@ public class MessageController {
     private static Path path;
     private static Path path_c;
     private long lastFileLenght;
-    private ArrayList<ListenerChangeFile> listenners ;
-    
+    private ArrayList<ListenerChangeFile> listenners;
 
     public MessageController() throws IOException {
         PropertiesLoader pl = new PropertiesLoader();
@@ -38,7 +37,7 @@ public class MessageController {
             Files.createFile(path_c);
             closeFile();
         }
-        
+
         this.lastFileLenght = fileLength();
     }
 
@@ -50,7 +49,7 @@ public class MessageController {
     }
 
     private boolean writeInFile(Message msg) throws IOException {
-        
+
         if (!canWrite()) {
             return false;
         }
@@ -98,32 +97,34 @@ public class MessageController {
             if (line != null && line.equals("-closed-")) {
                 return true;
             }
-            
+
             return false;
         }
     }
 
     public ArrayList<Message> listMessages() throws NumberFormatException, IOException {
         return loadMessages();
-    }   
+    }
 
     public void addListenner(ListenerChangeFile listenning) {
         this.listenners.add(listenning);
     }
-    
-    private long fileLength() throws IOException{
+
+    private long fileLength() throws IOException {
         return Files.size(path);
     }
-    
-    public void listenMsgs(){
-        Runnable runnable = new Runnable() {
+
+    public void listenMsgs() {
+//        Runnable runnable = new Runnable() {
+        new Thread() {
+            @Override
             public void run() {
-                for(;;){
+                for (;;) {
                     try {
                         long fileLen = fileLength();
-                        if(lastFileLenght!=fileLen){
+                        if (lastFileLenght != fileLen) {
                             for (ListenerChangeFile listener : listenners) {
-                                listener.notifyChange();                                
+                                listener.notifyChange();
                                 lastFileLenght = fileLen;
                             }
                         }
@@ -132,8 +133,8 @@ public class MessageController {
                     }
                 }
             }
-        };
-        
-        new Thread(runnable).start();
-    }    
+        }.start();
+
+//        new Thread(runnable).start();;
+    }
 }

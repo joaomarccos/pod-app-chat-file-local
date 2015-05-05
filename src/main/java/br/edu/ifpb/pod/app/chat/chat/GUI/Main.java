@@ -11,8 +11,7 @@ import br.edu.ifpb.pod.app.chat.file.MessageController;
 import br.edu.ifpb.pod.app.chat.file.entitys.Message;
 import br.edu.ifpb.pod.app.chat.file.entitys.User;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,26 +19,26 @@ import java.util.logging.Logger;
  *
  * @author Emanuel Batista da Silva Filho
  */
-public class Main extends javax.swing.JFrame implements ListenerChangeFile{
+public class Main extends javax.swing.JFrame implements ListenerChangeFile {
 
     /**
      * Creates new form Main
      */
     private User user;
-    private long ultimoMiliSegundo;
-   
-    
+    private Message ultimaMessagem;
+    private MessageController mc;
 
     public Main(User user) {
         initComponents();
         this.user = user;
-        
         login(user);
+        iniciarMessageController();
+
     }
 
-    private void login(User user1){
+    private void login(User user1) {
         try {
-            LoginController controller=new LoginController();
+            LoginController controller = new LoginController();
             controller.login(user1);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,7 +61,7 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile{
         jTextAreaMensagem = new javax.swing.JTextArea();
         jButtonSend = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextAreaConversa = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -104,9 +103,9 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile{
                 .addComponent(jButtonSend))
         );
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        jTextAreaConversa.setColumns(20);
+        jTextAreaConversa.setRows(5);
+        jScrollPane3.setViewportView(jTextAreaConversa);
 
         javax.swing.GroupLayout ChatPanelLayout = new javax.swing.GroupLayout(ChatPanel);
         ChatPanel.setLayout(ChatPanelLayout);
@@ -170,16 +169,33 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile{
 
     private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
         try {
-            MessageController mc = new MessageController();
-            mc.sendMessage(new Message(user.getName(), jTextAreaMensagem.getText()));
+            Message message = new Message(user.getName(), jTextAreaMensagem.getText());
+            mc.sendMessage(message);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_jButtonSendActionPerformed
 
+    private void iniciarMessageController() {
+        try {
+            mc = new MessageController();
+            mc.addListenner(this);
+            if (!mc.listMessages().isEmpty()) {
+                ultimaMessagem = mc.listMessages().get(mc.listMessages().size() - 1);
+            } else {
+                ultimaMessagem = null;
+            }
+              for (Message message : mc.listMessages()) {
+                    jTextAreaConversa.append(message.getUserName()+" : "+message.getMsg() + "\n");
+                }
+            mc.listenMsgs();
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ChatPanel;
     private javax.swing.JButton jButtonSend;
@@ -188,12 +204,29 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile{
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextAreaConversa;
     private javax.swing.JTextArea jTextAreaMensagem;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void notifyChange() {
-        
+        try {
+            List<Message> messages = mc.listMessages();
+            if (ultimaMessagem!=null) {
+                messages = messages.subList(messages.lastIndexOf(ultimaMessagem)+1, messages.size());
+                for (Message message : messages) {
+                    jTextAreaConversa.append(message.getUserName()+" : "+message.getMsg() + "\n");
+                }
+                ultimaMessagem=messages.get(messages.size()-1);
+            }else{
+                ultimaMessagem=messages.get(messages.size()-1);
+                for (Message message : messages) {
+                    jTextAreaConversa.append(message.getUserName()+" : "+message.getMsg() + "\n");
+                }
+            }
+        } catch (NumberFormatException | IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }
