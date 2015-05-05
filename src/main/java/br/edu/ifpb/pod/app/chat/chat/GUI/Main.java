@@ -6,6 +6,7 @@
 package br.edu.ifpb.pod.app.chat.chat.GUI;
 
 import br.edu.ifpb.pod.app.chat.file.ListenerChangeFile;
+import br.edu.ifpb.pod.app.chat.file.LoginController;
 import br.edu.ifpb.pod.app.chat.file.MessageController;
 import br.edu.ifpb.pod.app.chat.file.entitys.Message;
 import br.edu.ifpb.pod.app.chat.file.entitys.User;
@@ -26,11 +27,23 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile{
      */
     private User user;
     private long ultimoMiliSegundo;
+   
     
 
     public Main(User user) {
         initComponents();
         this.user = user;
+        
+        login(user);
+    }
+
+    private void login(User user1){
+        try {
+            LoginController controller=new LoginController();
+            controller.login(user1);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
