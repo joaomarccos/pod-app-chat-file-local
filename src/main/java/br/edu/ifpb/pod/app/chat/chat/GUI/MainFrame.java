@@ -96,11 +96,13 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnterActionPerformed
-        if (!this.jTextFielduserName.getText().isEmpty()) {
-            this.dispose();
+        if (!this.jTextFielduserName.getText().isEmpty()) {            
             User user = new User(jTextFielduserName.getText());
-            if(login(user))
+            if(login(user)){
+              this.dispose();
               new Main(user).setVisible(true);
+            }
+                
 
         }
     }//GEN-LAST:event_jButtonEnterActionPerformed

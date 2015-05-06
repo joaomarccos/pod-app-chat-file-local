@@ -1,13 +1,8 @@
 package br.edu.ifpb.pod.app.chat.file;
 
-import br.edu.ifpb.pod.app.chat.file.entitys.Message;
 import br.edu.ifpb.pod.app.chat.file.entitys.User;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *

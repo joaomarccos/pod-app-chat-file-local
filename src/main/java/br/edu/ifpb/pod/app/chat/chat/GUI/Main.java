@@ -56,6 +56,11 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(java.awt.Color.white);
         jPanel1.setBorder(null);
@@ -173,7 +178,8 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
     private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
         try {
             Message message = new Message(user.getName(), jTextAreaMensagem.getText().replace("\n", ""));
-            mc.sendMessage(message);
+            if(!message.getMsg().isEmpty())
+                mc.sendMessage(message);
             jTextAreaMensagem.setText("");
             jButtonSend.setEnabled(false);
         } catch (IOException ex) {
@@ -195,6 +201,14 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
 
     private void jButtonSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonSendKeyPressed
     }//GEN-LAST:event_jButtonSendKeyPressed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            new LoginController().logout(user);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     private void iniciarMessageController() {
         try {
