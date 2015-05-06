@@ -6,7 +6,11 @@
 package br.edu.ifpb.pod.app.chat.chat.GUI;
 
 import br.edu.ifpb.pod.app.chat.file.ListenerChangeFile;
+import br.edu.ifpb.pod.app.chat.file.LoginController;
 import br.edu.ifpb.pod.app.chat.file.entitys.User;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -21,7 +25,6 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -93,14 +96,24 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnterActionPerformed
-        if(!this.jTextFielduserName.getText().isEmpty()){
+        if (!this.jTextFielduserName.getText().isEmpty()) {
             this.dispose();
-            User user=new User(jTextFielduserName.getText());
-            new Main(user).setVisible(true);
+            User user = new User(jTextFielduserName.getText());
+            if(login(user))
+              new Main(user).setVisible(true);
 
         }
     }//GEN-LAST:event_jButtonEnterActionPerformed
 
+    private boolean login(User user1) {
+        try {
+            LoginController controller = new LoginController();
+            return controller.login(user1);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO close the socket connections
     }//GEN-LAST:event_formWindowClosed

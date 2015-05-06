@@ -37,13 +37,15 @@ public class LoginController {
     }
 
     @SuppressWarnings("empty-statement")
-    public void login(User user) throws IOException {
+    public boolean login(User user) throws IOException {
 
         ArrayList<User> loggedUsers = loadUsers();
 
         if (!loggedUsers.contains(user)) {
             while (!writeInFile(user));
+            return true;
         }
+        return false;
 
     }
 

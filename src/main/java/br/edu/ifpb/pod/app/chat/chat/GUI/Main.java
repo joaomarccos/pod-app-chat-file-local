@@ -32,18 +32,8 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
     public Main(User user) {
         initComponents();
         this.user = user;
-        login(user);
         iniciarMessageController();
 
-    }
-
-    private void login(User user1) {
-        try {
-            LoginController controller = new LoginController();
-            controller.login(user1);
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
