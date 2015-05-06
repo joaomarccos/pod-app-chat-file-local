@@ -10,6 +10,7 @@ import br.edu.ifpb.pod.app.chat.file.LoginController;
 import br.edu.ifpb.pod.app.chat.file.MessageController;
 import br.edu.ifpb.pod.app.chat.file.entitys.Message;
 import br.edu.ifpb.pod.app.chat.file.entitys.User;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -76,12 +77,23 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
 
         jTextAreaMensagem.setColumns(20);
         jTextAreaMensagem.setRows(3);
+        jTextAreaMensagem.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextAreaMensagemKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextAreaMensagem);
 
         jButtonSend.setText("Send");
+        jButtonSend.setEnabled(false);
         jButtonSend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSendActionPerformed(evt);
+            }
+        });
+        jButtonSend.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButtonSendKeyPressed(evt);
             }
         });
 
@@ -103,6 +115,7 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
                 .addComponent(jButtonSend))
         );
 
+        jTextAreaConversa.setEditable(false);
         jTextAreaConversa.setColumns(20);
         jTextAreaConversa.setRows(5);
         jScrollPane3.setViewportView(jTextAreaConversa);
@@ -169,13 +182,29 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
 
     private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
         try {
-            Message message = new Message(user.getName(), jTextAreaMensagem.getText());
+            Message message = new Message(user.getName(), jTextAreaMensagem.getText().replace("\n", ""));
             mc.sendMessage(message);
+            jTextAreaMensagem.setText("");
+            jButtonSend.setEnabled(false);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_jButtonSendActionPerformed
+
+    private void jTextAreaMensagemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaMensagemKeyReleased
+        if (jTextAreaMensagem.getText().isEmpty()) {
+            jButtonSend.setEnabled(false);
+        } else {
+            jButtonSend.setEnabled(true);
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                jButtonSendActionPerformed(null);
+            }
+        }
+    }//GEN-LAST:event_jTextAreaMensagemKeyReleased
+
+    private void jButtonSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonSendKeyPressed
+    }//GEN-LAST:event_jButtonSendKeyPressed
 
     private void iniciarMessageController() {
         try {
@@ -186,9 +215,9 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
             } else {
                 ultimaMessagem = null;
             }
-              for (Message message : mc.listMessages()) {
-                    jTextAreaConversa.append(message.getUserName()+" : "+message.getMsg() + "\n");
-                }
+            for (Message message : mc.listMessages()) {
+                jTextAreaConversa.append(message.getUserName() + " : " + message.getMsg() + "\n");
+            }
             mc.listenMsgs();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -212,16 +241,16 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
     public void notifyChange() {
         try {
             List<Message> messages = mc.listMessages();
-            if (ultimaMessagem!=null) {
-                messages = messages.subList(messages.lastIndexOf(ultimaMessagem)+1, messages.size());
+            if (ultimaMessagem != null) {
+                messages = messages.subList(messages.lastIndexOf(ultimaMessagem) + 1, messages.size());
                 for (Message message : messages) {
-                    jTextAreaConversa.append(message.getUserName()+" : "+message.getMsg() + "\n");
+                    jTextAreaConversa.append(message.getUserName() + " : " + message.getMsg() + "\n");
                 }
-                ultimaMessagem=messages.get(messages.size()-1);
-            }else{
-                ultimaMessagem=messages.get(messages.size()-1);
+                ultimaMessagem = messages.get(messages.size() - 1);
+            } else {
+                ultimaMessagem = messages.get(messages.size() - 1);
                 for (Message message : messages) {
-                    jTextAreaConversa.append(message.getUserName()+" : "+message.getMsg() + "\n");
+                    jTextAreaConversa.append(message.getUserName() + " : " + message.getMsg() + "\n");
                 }
             }
         } catch (NumberFormatException | IOException ex) {
