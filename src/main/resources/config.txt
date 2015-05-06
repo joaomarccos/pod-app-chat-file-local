@@ -1,4 +1,0 @@
-login-file=/home/joaomarcos/data/login.txt
-msg-file=/home/joaomarcos/data/mensagem.txt
-login-c-file=/home/joaomarcos/data/login-c.txt
-msg-c-file=/home/joaomarcos/data/mensagem-c.txt
