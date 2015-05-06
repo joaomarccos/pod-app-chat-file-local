@@ -47,7 +47,7 @@ public class LoginController {
 
     }
 
-    public boolean writeInFile(User user) throws IOException {
+    private boolean writeInFile(User user) throws IOException {
 
         if (!canWrite()) {
             return false;
@@ -66,11 +66,11 @@ public class LoginController {
 
     }
 
-    public void closeFile() throws IOException {
+    private void closeFile() throws IOException {
         Files.write(path_c, "-closed-".getBytes());
     }
 
-    public void openFile() throws IOException {
+    private void openFile() throws IOException {
         Files.write(path_c, "-openned-".getBytes());
     }
 
@@ -106,7 +106,7 @@ public class LoginController {
         
     }
 
-    public boolean canWrite() throws IOException {
+    private boolean canWrite() throws IOException {
 
         try (BufferedReader read = Files.newBufferedReader(path_c)) {
             String line = read.readLine();

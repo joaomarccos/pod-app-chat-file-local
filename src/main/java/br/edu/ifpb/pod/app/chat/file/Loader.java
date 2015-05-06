@@ -2,7 +2,10 @@ package br.edu.ifpb.pod.app.chat.file;
 
 import br.edu.ifpb.pod.app.chat.file.entitys.Message;
 import br.edu.ifpb.pod.app.chat.file.entitys.User;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,17 +15,13 @@ import java.util.logging.Logger;
  */
 public class Loader {
 
-    public static void main(String[] args) {
-
-        try {
-            MessageController mc = new MessageController();
-            for (int i = 0; i < 10; i++) {
-                mc.sendMessage(new Message("joão"+i, "Oi"+i));
-            }
-            
-
-        } catch (IOException ex) {
-            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static void main(String[] args) throws IOException {  
+        
+        LoginController log = new LoginController();
+        log.login(new User("João"));
+        System.out.println(log.listUsers());
+        log.logout(new User("João"));
+        System.out.println(log.listUsers());
+               
     }
 }

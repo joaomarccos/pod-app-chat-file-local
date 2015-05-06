@@ -1,10 +1,12 @@
 package br.edu.ifpb.pod.app.chat.file.entitys;
 
+import java.io.Serializable;
+
 /**
  *
  * @author João Marcos F <joaomarccos.ads@gmail.com>
  */
-public class User{    
+public class User implements Serializable{    
     private String name;
 
     public User(String nome) {

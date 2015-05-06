@@ -82,7 +82,7 @@ public class MessageController {
             String[] data;
             while ((line = read.readLine()) != null) {
                 data = line.split(":");
-                msgs.add(new Message(Long.parseLong(data[0]), data[1], data[2]));
+                msgs.add(new Message(Long.parseLong(data[0]), data[1], data[2]));   
             }
 
             return msgs;

@@ -1,10 +1,12 @@
 package br.edu.ifpb.pod.app.chat.file.entitys;
 
+import java.io.Serializable;
+
 /**
  *
  * @author João Marcos F <joaomarccos.ads@gmail.com>
  */
-public class Message implements Comparable<Message>{
+public class Message implements Comparable<Message>, Serializable{
     private long id;
     private String userName;
     private String msg;
