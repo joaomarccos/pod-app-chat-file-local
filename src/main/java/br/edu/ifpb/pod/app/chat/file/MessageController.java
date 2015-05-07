@@ -38,7 +38,7 @@ public class MessageController {
             closeFile();
         }
 
-        this.lastFileLenght = fileLength();
+        this.lastFileLenght = getFileLength();
     }
 
     @SuppressWarnings("empty-statement")
@@ -110,18 +110,16 @@ public class MessageController {
         this.listenners.add(listenning);
     }
 
-    private long fileLength() throws IOException {
+    private long getFileLength() throws IOException {
         return Files.size(path);
     }
 
-    public void listenMsgs() {
-//        Runnable runnable = new Runnable() {
-        new Thread() {
-            @Override
+    public void listenMsgs() {        
+        Runnable runnable = new Runnable() {
             public void run() {
                 for (;;) {
                     try {
-                        long fileLen = fileLength();
+                        long fileLen = getFileLength();
                         if (lastFileLenght != fileLen) {
                             for (ListenerChangeFile listener : listenners) {
                                 listener.notifyChange();
@@ -133,8 +131,8 @@ public class MessageController {
                     }
                 }
             }
-        }.start();
-
-//        new Thread(runnable).start();;
+        };
+                
+        new Thread(runnable).start();
     }
 }

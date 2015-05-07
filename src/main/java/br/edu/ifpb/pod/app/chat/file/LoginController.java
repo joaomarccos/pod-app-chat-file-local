@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,12 +21,15 @@ public class LoginController {
 
     private static Path path;
     private static Path path_c;
+    private long lastFileLenght;
+    private ArrayList<ListenerChangeFile> listenners;
 
     public LoginController() throws IOException {
         PropertiesLoader pl = new PropertiesLoader();
         path = pl.getLoginfile();
         path_c = pl.getLoginCurFile();
-
+        this.listenners = new ArrayList<>();
+        
         if (!Files.exists(path)) {
             Files.createFile(path);
         }
@@ -33,6 +38,8 @@ public class LoginController {
             Files.createFile(path_c);
             closeFile();
         }
+        
+        this.lastFileLenght = getFileLength();
 
     }
 
@@ -89,6 +96,7 @@ public class LoginController {
         return users;
     }
 
+    @SuppressWarnings("empty-statement")
     public void logout(User user) throws IOException {
 
         ArrayList<User> loggedUsers = loadUsers();
@@ -118,9 +126,39 @@ public class LoginController {
         }
         return false;
     }
+    
+    public void addListenner(ListenerChangeFile listenning) {
+        this.listenners.add(listenning);
+    }
+    
+    private long getFileLength() throws IOException {
+        return Files.size(path);
+    }
 
     public ArrayList<User> listUsers() throws IOException {
         return loadUsers();
+    }
+    
+    public void listenMsgs() {        
+        Runnable runnable = new Runnable() {
+            public void run() {
+                for (;;) {
+                    try {
+                        long fileLen = getFileLength();
+                        if (lastFileLenght != fileLen) {
+                            for (ListenerChangeFile listener : listenners) {
+                                listener.notifyChange();
+                                lastFileLenght = fileLen;
+                            }
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(MessageController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        };
+                
+        new Thread(runnable).start();
     }
 
 }
