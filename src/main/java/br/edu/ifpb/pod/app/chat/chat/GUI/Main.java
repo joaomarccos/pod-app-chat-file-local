@@ -27,12 +27,13 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
      */
     private User user;
     private Message ultimaMessagem;
-    private MessageController mc;
+    private MessageController messageController;
+    private LoginController loginController;
 
     public Main(User user) {
-        this.user = user;
+        this.user = user;        
         initComponents();
-        iniciarMessageController();
+        inciarControladores();
 
     }
 
@@ -57,6 +58,9 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPaneUsuarios = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -100,7 +104,7 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonSend)
                 .addContainerGap())
@@ -167,6 +171,25 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
                 .addContainerGap())
         );
 
+        jPanel4.setBackground(new java.awt.Color(254, 254, 254));
+        jPanel4.setBorder(null);
+
+        jTextPaneUsuarios.setEditable(false);
+        jTextPaneUsuarios.setBorder(null);
+        jTextPaneUsuarios.setForeground(new java.awt.Color(1, 168, 66));
+        jScrollPane2.setViewportView(jTextPaneUsuarios);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -174,11 +197,14 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ChatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(206, 206, 206)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(312, 312, 312)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ChatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -187,12 +213,15 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(30, 30, 30))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(ChatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ChatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -200,7 +229,9 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,7 +245,7 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
         try {
             Message message = new Message(user.getName(), jTextAreaMensagem.getText().replace("\n", ""));
             if(!message.getMsg().isEmpty())
-                mc.sendMessage(message);
+                messageController.sendMessage(message);
             jTextAreaMensagem.setText("");
             jButtonSend.setEnabled(false);
         } catch (IOException ex) {
@@ -245,19 +276,32 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
         }
     }//GEN-LAST:event_formWindowClosing
 
-    private void iniciarMessageController() {
+    private void inciarControladores() {
+        iniciarControladorMensagem();
+        inciarControladorLogin();
+    }
+
+    private void iniciarControladorMensagem() throws NumberFormatException {
         try {
-            mc = new MessageController();
-            mc.addListenner(this);
-            if (!mc.listMessages().isEmpty()) {
-                ultimaMessagem = mc.listMessages().get(mc.listMessages().size() - 1);
+            messageController = new MessageController();
+            messageController.addListenner(this);
+            if (!messageController.listMessages().isEmpty()) {
+                ultimaMessagem = messageController.listMessages().get(messageController.listMessages().size() - 1);
             } else {
                 ultimaMessagem = null;
             }
-            for (Message message : mc.listMessages()) {
+            for (Message message : messageController.listMessages()) {
                 jTextAreaConversa.append(message.getUserName() + " : " + message.getMsg() + "\n");
             }
-            mc.listenMsgs();
+            messageController.listenMsgs();
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void inciarControladorLogin(){
+        try {
+            this.loginController = new LoginController();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -273,16 +317,19 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextAreaConversa;
     private javax.swing.JTextArea jTextAreaMensagem;
+    private javax.swing.JTextPane jTextPaneUsuarios;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void notifyChangeOnMessages() {
         try {
-            List<Message> messages = mc.listMessages();
+            List<Message> messages = messageController.listMessages();
             if (ultimaMessagem != null) {
                 messages = messages.subList(messages.lastIndexOf(ultimaMessagem) + 1, messages.size());
                 for (Message message : messages) {
@@ -303,6 +350,14 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
 
     @Override
     public void notifyChangeOnLogin() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            List<User> users=loginController.listUsers();
+            System.out.println(users);
+            for(User user:users){
+                jTextPaneUsuarios.setText(jTextPaneUsuarios.getText()+"\n"+user.getName());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
