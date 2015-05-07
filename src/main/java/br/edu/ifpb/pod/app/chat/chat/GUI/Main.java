@@ -278,7 +278,7 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
 
     private void inciarControladores() {
         iniciarControladorMensagem();
-        inciarControladorLogin();
+        iniciarControladorLogin();
     }
 
     private void iniciarControladorMensagem() throws NumberFormatException {
@@ -293,15 +293,20 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
             for (Message message : messageController.listMessages()) {
                 jTextAreaConversa.append(message.getUserName() + " : " + message.getMsg() + "\n");
             }
-            messageController.listenMsgs();
+            messageController.checkMessages();
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    private void inciarControladorLogin(){
+    private void iniciarControladorLogin(){
         try {
             this.loginController = new LoginController();
+            loginController.addListenner(this);
+            loginController.checkUsers();           
+            for (User usuarios : loginController.listUsers()) {
+                jTextPaneUsuarios.setText(jTextPaneUsuarios.getText()+"\n"+usuarios.toString());
+            }
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -350,11 +355,10 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
 
     @Override
     public void notifyChangeOnLogin() {
-        try {
-            List<User> users=loginController.listUsers();
-            System.out.println(users);
-            for(User user:users){
-                jTextPaneUsuarios.setText(jTextPaneUsuarios.getText()+"\n"+user.getName());
+        try {                 
+            jTextPaneUsuarios.setText("");
+            for (User user : loginController.listUsers()) {
+                jTextPaneUsuarios.setText(jTextPaneUsuarios.getText()+"\n"+user.toString());
             }
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

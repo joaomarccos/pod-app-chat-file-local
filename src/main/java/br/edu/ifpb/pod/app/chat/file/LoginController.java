@@ -139,17 +139,19 @@ public class LoginController {
         return loadUsers();
     }
     
-    public void listenMsgs() {        
+    public void checkUsers() {        
         Runnable runnable = new Runnable() {
+            @Override
             public void run() {
                 for (;;) {
-                    try {
+                    try {                       
                         long fileLen = getFileLength();
-                        if (lastFileLenght != fileLen) {
+                        if (lastFileLenght != fileLen) {                                                        
                             for (ListenerChangeFile listener : listenners) {
                                 listener.notifyChangeOnLogin();
                                 lastFileLenght = fileLen;
                             }
+                            System.out.println("Eh para modificar");
                         }
                     } catch (IOException ex) {
                         Logger.getLogger(MessageController.class.getName()).log(Level.SEVERE, null, ex);

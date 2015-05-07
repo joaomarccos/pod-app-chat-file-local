@@ -114,7 +114,7 @@ public class MessageController {
         return Files.size(path);
     }
 
-    public void listenMsgs() {        
+    public void checkMessages() {        
         Runnable runnable = new Runnable() {
             public void run() {
                 for (;;) {
