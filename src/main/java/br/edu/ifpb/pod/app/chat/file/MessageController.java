@@ -122,7 +122,7 @@ public class MessageController {
                         long fileLen = getFileLength();
                         if (lastFileLenght != fileLen) {
                             for (ListenerChangeFile listener : listenners) {
-                                listener.notifyChange();
+                                listener.notifyChangeOnMessages();
                                 lastFileLenght = fileLen;
                             }
                         }

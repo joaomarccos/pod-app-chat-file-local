@@ -11,5 +11,6 @@ package br.edu.ifpb.pod.app.chat.file;
  */
 public interface ListenerChangeFile {
     
-    public void notifyChange ();
+    public void notifyChangeOnMessages ();
+    public void notifyChangeOnLogin ();
 }

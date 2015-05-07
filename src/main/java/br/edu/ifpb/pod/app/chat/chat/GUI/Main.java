@@ -280,7 +280,7 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void notifyChange() {
+    public void notifyChangeOnMessages() {
         try {
             List<Message> messages = mc.listMessages();
             if (ultimaMessagem != null) {
@@ -299,5 +299,10 @@ public class Main extends javax.swing.JFrame implements ListenerChangeFile {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    @Override
+    public void notifyChangeOnLogin() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

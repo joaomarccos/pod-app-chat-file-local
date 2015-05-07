@@ -147,7 +147,7 @@ public class LoginController {
                         long fileLen = getFileLength();
                         if (lastFileLenght != fileLen) {
                             for (ListenerChangeFile listener : listenners) {
-                                listener.notifyChange();
+                                listener.notifyChangeOnLogin();
                                 lastFileLenght = fileLen;
                             }
                         }
