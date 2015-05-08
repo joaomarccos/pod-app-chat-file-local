@@ -11,6 +11,7 @@ import br.edu.ifpb.pod.app.chat.file.entitys.User;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -101,6 +102,8 @@ public class MainFrame extends javax.swing.JFrame {
             if(login(user)){
               this.dispose();
               new Main(user).setVisible(true);
+            }else {
+                JOptionPane.showMessageDialog(this, "Esse usuário já está logado");
             }
                 
 
